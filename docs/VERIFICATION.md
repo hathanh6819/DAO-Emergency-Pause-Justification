@@ -5,7 +5,7 @@ Verified on 2026-09-06 in Windows/PowerShell with Python 3.12.
 ## Exact reviewed release
 
 - Contract: `contracts/dao_emergency_pause_justification.py`
-- Source SHA-256: `d2db3ffcbbcb88b33aa0c212d12237b2e716e26a18d44dc53983ebcb55f44347`
+- Source SHA-256: `414d78b9d346e005fc1b455337e9cbc3b3681e730c2493789ffd58dbf1380c3a`
 - Fixture/source commit: `999af91c5e8effd7ea0d44e9ebc5967ff6e4ebab`
 - Runner header: `v0.2.16` and the repository-pinned `py-genlayer` dependency.
 
@@ -13,7 +13,12 @@ Verified on 2026-09-06 in Windows/PowerShell with Python 3.12.
 
 ```text
 python scripts/verify_local.py
-39 passed, 0 failed, 0 skipped
+40 passed, 0 failed, 0 skipped
+architecture_check=PASS
+nondet_storage_reads=0
+oversized_sources=fail_closed
+timestamp_comparison=canonical_epoch
+git_blob_identity=verified
 verification=PASS
 
 $env:PYTHONIOENCODING='utf-8'; genvm-lint check contracts/dao_emergency_pause_justification.py

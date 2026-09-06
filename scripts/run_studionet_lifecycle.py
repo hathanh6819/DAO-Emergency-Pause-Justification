@@ -8,7 +8,7 @@ import os
 from genlayer_py import create_account, create_client, studionet
 from genlayer_py.types.transactions import TransactionStatus
 
-CONTRACT = os.environ.get("PAUSE_CONTRACT_ADDRESS", "0xA31872DF1E62A84230a73F7204E1BC21c340dC2c")
+CONTRACT = os.environ.get("PAUSE_CONTRACT_ADDRESS", "").strip()
 REPOSITORY = "hathanh6819/dao-emergency-pause-justification"
 POLICY_PATH = "fixtures/canonical/pause-policy.json"
 INCIDENT_PATH = "fixtures/canonical/INC-2026-001.json"
@@ -51,6 +51,8 @@ def write(client, method, args, timeout=1500):
 
 
 def main():
+    if not CONTRACT:
+        raise SystemExit("Set PAUSE_CONTRACT_ADDRESS to the newly deployed, source-verified contract")
     secret = os.environ.get("PAUSE_OWNER_PRIVATE_KEY", "").strip()
     if not secret:
         raise SystemExit("Set PAUSE_OWNER_PRIVATE_KEY to the private key of the deployment owner")
@@ -70,6 +72,9 @@ def main():
     print("council=" + str(council.address), flush=True)
     print("execution=" + str(execution.address), flush=True)
     txs = {}
+    info = read(owner_client, "get_protocol_info")
+    checkpoint(info.get("version") == 3 and info.get("custody") is False, "expected non-custodial contract schema")
+    checkpoint(str(info.get("owner", "")).lower() == str(owner.address).lower(), "deployment owner identity matches signer")
     checkpoint(read(owner_client, "get_counts") == {"protocol_count": 0, "case_count": 0}, "fresh deployment")
 
     before = read(owner_client, "get_counts")

@@ -31,6 +31,6 @@ Canonical lifecycle inputs:
 
 The first registration transaction `0xe77904ad981fc74f59ea8877a258e0d1d777987a73dbbd062afe28c41db972c8` finalized but returned `INVALID_AUTHORITIES`. The receipt proves both intended addresses were encoded correctly. This exposed a GenVM runtime representation mismatch (`str(Address)` versus canonical `Address.as_hex`); state remained at zero and the source was patched with a dedicated regression test.
 
-Corrected v3 source SHA-256: `d2db3ffcbbcb88b33aa0c212d12237b2e716e26a18d44dc53983ebcb55f44347`. Local verification: 39 Direct Mode tests passed; GenVM lint and validation passed (12 methods, 4 view, 8 write).
+Corrected v3 source SHA-256: `414d78b9d346e005fc1b455337e9cbc3b3681e730c2493789ffd58dbf1380c3a`. Local verification: 40 Direct Mode tests passed; architecture release gate passed; GenVM lint and validation passed (12 methods, 4 view, 8 write).
 
 Record the fixture commit, finalized transaction hashes, and matching before/after `get_case` reads here after the lifecycle. Do not claim a live result until the explorer shows finalized status.

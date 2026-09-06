@@ -374,7 +374,7 @@ class DAOEmergencyPauseJustification(gl.Contract):
 
     @gl.public.view
     def get_protocol_info(self) -> dict:
-        return {"name": "DAOEmergencyPauseJustification", "version": 2, "owner": self.owner, "custody": False, "chain_id": BASE_CHAIN_ID, "claim_boundary": "authenticated council statement supports a bounded pause; not objective exploit truth", "authority": "owner registry + security council attestation + GitHub exact commit/tree/blobs + Base Blockscout transaction"}
+        return {"name": "DAOEmergencyPauseJustification", "version": 3, "owner": self.owner, "custody": False, "chain_id": BASE_CHAIN_ID, "claim_boundary": "authenticated council statement supports a bounded pause; not objective exploit truth", "authority": "owner registry + security council attestation + GitHub exact commit/tree/blobs + Base Blockscout transaction"}
 
     @gl.public.view
     def get_counts(self) -> dict:

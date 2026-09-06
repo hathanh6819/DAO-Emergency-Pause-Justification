@@ -16,6 +16,8 @@ def run(command: list[str]) -> None:
 
 
 run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider"])
+run([sys.executable, "scripts/check_contract_architecture.py"])
+run(["genvm-lint", "check", str(SOURCE)])
 body = SOURCE.read_bytes()
 compile(body, str(SOURCE), "exec")
 print(f"contract_bytes={len(body)}")

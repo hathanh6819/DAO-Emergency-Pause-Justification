@@ -44,6 +44,9 @@ def test_shape_is_distinct_and_nonpayable():
     assert 'hasattr(value, "as_hex")' in s and "_address_text(security_council)" in s and "_address_text(affected_contract)" in s
     compile(s,CONTRACT,"exec")
 
+def test_contract_identity_is_v3(direct_deploy):
+    info=deploy(direct_deploy).get_protocol_info();assert info["version"]==3 and info["custody"] is False
+
 def test_owner_registry_and_rotation(direct_deploy,direct_vm,direct_bob):
     c=deploy(direct_deploy)
     with direct_vm.prank(direct_bob): assert setup(c)=="ONLY_OWNER"

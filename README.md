@@ -28,6 +28,8 @@ The deployer address is exposed by `get_protocol_info`. Only it can register, ro
 python scripts/verify_local.py
 ```
 
+This single release gate runs the full Direct Mode suite, architecture invariants and GenVM lint/validation. It rejects storage reads inside the nondeterministic evaluator, source truncation, missing byte bounds, unauthenticated Git blobs, raw-string timestamp comparison and unexpected payable surface before deployment.
+
 Constructor arguments: none.
 
 See [SPEC.md](SPEC.md), [test resources](docs/test-resources.md), and [threat model](docs/threat-model.md).
