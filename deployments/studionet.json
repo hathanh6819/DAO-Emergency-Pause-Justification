@@ -14,6 +14,12 @@
       "status": "superseded_timestamp_canonicalization_and_nondet_storage_read"
     }
   ],
-  "final_submission": null,
+  "final_submission": {
+    "address": "0x6F5e72cEd396f3D07F4523320fd6a7CB1cC10415",
+    "deployment_transaction": "0x06011e9b1a96396eccd3e54b09821104ffef0f47855912c89d6fe0ad7bb4701d",
+    "source_sha256": "414d78b9d346e005fc1b455337e9cbc3b3681e730c2493789ffd58dbf1380c3a",
+    "source_parity": "exact_byte_for_byte",
+    "status": "verified_historical_fail_closed_lifecycle"
+  },
   "replacement_source_sha256": "414d78b9d346e005fc1b455337e9cbc3b3681e730c2493789ffd58dbf1380c3a"
 }
