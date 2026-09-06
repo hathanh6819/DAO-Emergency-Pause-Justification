@@ -238,6 +238,9 @@ class DAOEmergencyPauseJustification(gl.Contract):
         code = self.protocol_code[protocol_id]; chain_id = int(self.protocol_chain_id[protocol_id])
         affected = self.case_affected_contract[case_id]; capability = self.case_capability[case_id]
         incident_tx = self.case_incident_tx[case_id]; duration = int(self.case_duration[case_id])
+        registered_council = self.protocol_security_council[protocol_id]
+        expected_policy_revision = int(self.case_expected_policy_revision[case_id])
+        assessment_time = _now()
 
         def evaluate() -> str:
             headers = {"Accept": "application/vnd.github+json", "User-Agent": "DAOEmergencyPauseVerifier/1.0"}
@@ -276,7 +279,7 @@ class DAOEmergencyPauseJustification(gl.Contract):
             if not isinstance(incident, dict) or set(incident.keys()) != incident_keys or not isinstance(policy, dict) or set(policy.keys()) != policy_keys: return _result(UNRESOLVED, "SCHEMA_INVALID")
             if str(incident.get("protocol_code", "")).upper() != code or str(policy.get("protocol_code", "")).upper() != code: return _result(SCOPE_MISMATCH, "PROTOCOL_IDENTITY_MISMATCH")
             if int(incident.get("chain_id", 0)) != chain_id or str(incident.get("affected_contract", "")).lower() != affected or str(incident.get("capability", "")).upper() != capability or str(incident.get("incident_tx_hash", "")).lower() != incident_tx: return _result(SCOPE_MISMATCH, "BOUND_SCOPE_MISMATCH")
-            if str(incident.get("attesting_council", "")).lower() != self.protocol_security_council[protocol_id]: return _result(SCOPE_MISMATCH, "ATTESTING_COUNCIL_MISMATCH")
+            if str(incident.get("attesting_council", "")).lower() != registered_council: return _result(SCOPE_MISMATCH, "ATTESTING_COUNCIL_MISMATCH")
             try:
                 tx_response = gl.nondet.web.get("https://base.blockscout.com/api/v2/transactions/" + incident_tx, headers={"Accept": "application/json", "User-Agent": "DAOEmergencyPauseVerifier/1.0"})
                 tx_body = tx_response.body or b""
@@ -287,13 +290,14 @@ class DAOEmergencyPauseJustification(gl.Contract):
                 if not isinstance(tx_to, dict) or str(tx_to.get("hash", "")).lower() != affected: return _result(SCOPE_MISMATCH, "TRANSACTION_TARGET_MISMATCH")
                 if str(tx_json.get("status", "")).lower() not in ("ok", "success", "1"): return _result(INSUFFICIENT, "TRANSACTION_NOT_CONFIRMED")
                 observed_at = str(incident.get("observed_at", ""))
-                if str(tx_json.get("timestamp", "")) != observed_at: return _result(SCOPE_MISMATCH, "TRANSACTION_TIME_MISMATCH")
+                tx_epoch = int(datetime.fromisoformat(str(tx_json.get("timestamp", "")).replace("Z", "+00:00")).timestamp())
                 observed_epoch = int(datetime.fromisoformat(observed_at.replace("Z", "+00:00")).timestamp())
+                if tx_epoch != observed_epoch: return _result(SCOPE_MISMATCH, "TRANSACTION_TIME_MISMATCH")
             except Exception:
                 return _result(UNRESOLVED, "TRANSACTION_SOURCE_MALFORMED")
-            if int(policy.get("policy_revision", 0)) != int(self.case_expected_policy_revision[case_id]): return _result(POLICY_VIOLATION, "POLICY_DOCUMENT_REVISION_MISMATCH")
+            if int(policy.get("policy_revision", 0)) != expected_policy_revision: return _result(POLICY_VIOLATION, "POLICY_DOCUMENT_REVISION_MISMATCH")
             minimum = int(policy.get("min_pause_seconds", 0)); maximum = int(policy.get("max_pause_seconds", 0))
-            max_age = int(policy.get("max_incident_age_seconds", 0)); age = _now() - observed_epoch
+            max_age = int(policy.get("max_incident_age_seconds", 0)); age = assessment_time - observed_epoch
             if max_age < 60 or max_age > MAX_INCIDENT_AGE_SECONDS or age < 0 or age > max_age: return _result(POLICY_VIOLATION, "INCIDENT_OUTSIDE_AUTHORIZATION_WINDOW")
             severity = str(incident.get("severity", "")).upper(); allowed = policy.get("allowed_severities", [])
             if duration < minimum or duration > maximum or not isinstance(allowed, list) or severity not in [str(v).upper() for v in allowed]: return _result(POLICY_VIOLATION, "DURATION_OR_SEVERITY_NOT_ALLOWED")

@@ -6,14 +6,14 @@
       "address": "0xA31872DF1E62A84230a73F7204E1BC21c340dC2c",
       "source_sha256": "b2169ac0d285602ee6457a2aaf4e3f7a6d4d8c21f0bb0183fad5589ed87454c1",
       "status": "superseded_runtime_address_bug"
+    },
+    {
+      "address": "0x8FB121E391c03E115Bed9b283C9233aAAdaC113f",
+      "source_sha256": "132989841bdcbfce19a902be360ddbc591dc9d0a178e850ca4a50dbea4482e8f",
+      "normalized_source_sha256": "0a1bff77f2187e4ff9d98800a1c246cdabf45114887125666efb875d78e7a2c5",
+      "status": "superseded_timestamp_canonicalization_and_nondet_storage_read"
     }
   ],
-  "final_submission": {
-    "address": "0x8FB121E391c03E115Bed9b283C9233aAAdaC113f",
-    "source_sha256": "132989841bdcbfce19a902be360ddbc591dc9d0a178e850ca4a50dbea4482e8f",
-    "normalized_source_sha256": "0a1bff77f2187e4ff9d98800a1c246cdabf45114887125666efb875d78e7a2c5",
-    "source_parity": "exact_after_lf_normalization",
-    "status": "deployed_runtime_probe_pending"
-  },
-  "replacement_source_sha256": "132989841bdcbfce19a902be360ddbc591dc9d0a178e850ca4a50dbea4482e8f"
+  "final_submission": null,
+  "replacement_source_sha256": "d2db3ffcbbcb88b33aa0c212d12237b2e716e26a18d44dc53983ebcb55f44347"
 }

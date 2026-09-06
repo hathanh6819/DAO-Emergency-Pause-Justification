@@ -75,6 +75,10 @@ def test_justified_consume_scope_and_replay(direct_deploy,direct_vm):
 def test_semantic_negative_never_authorizes(direct_deploy,direct_vm,active,material,matches,status):
     c=prepared(direct_deploy,direct_vm);mock_sources(direct_vm);mock_model(direct_vm,active,material,matches);assert c.assess_pause(1,1)==status;assert c.get_case(1)["consumed"]==0
 
+def test_equivalent_timestamp_precision_is_canonicalized(direct_deploy,direct_vm):
+    c=prepared(direct_deploy,direct_vm);mock_sources(direct_vm,tx_time="2026-09-06T00:00:00.000000Z");mock_model(direct_vm)
+    assert c.assess_pause(1,1)=="COUNCIL_ATTESTATION_SUPPORTS_PAUSE"
+
 @pytest.mark.parametrize("kwargs,expected",[
     ({"inc":incident(chain_id=1)},"BOUND_SCOPE_MISMATCH"),({"inc":incident(affected_contract=TARGET)},"BOUND_SCOPE_MISMATCH"),
     ({"inc":incident(incident_tx_hash="0x"+"9"*64)},"BOUND_SCOPE_MISMATCH"),({"pol":policy(max_pause_seconds=1000)},"DURATION_OR_SEVERITY_NOT_ALLOWED"),
