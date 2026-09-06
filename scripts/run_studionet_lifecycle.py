@@ -88,18 +88,14 @@ def main():
 
     txs["assess_pause"] = write(owner_client, "assess_pause", [1, 1])
     assessed = read(owner_client, "get_case", [1])
-    checkpoint(assessed.get("status") == "PAUSE_JUSTIFIED", "historical incident replay justified at locked observation time")
-    checkpoint(str(assessed.get("evidence_digest", "")).startswith("sha256:"), "assessment publishes bounded receipt digest")
+    checkpoint(assessed.get("status") == "POLICY_VIOLATION", "historical incident cannot authorize a current pause")
+    checkpoint(assessed.get("reason") == "INCIDENT_OUTSIDE_AUTHORIZATION_WINDOW", "temporal failure is explicit")
+    checkpoint(str(assessed.get("evidence_digest", "")).startswith("sha256:"), "non-positive assessment publishes bounded receipt digest")
 
-    before_consume = dict(assessed)
     txs["wrong_caller_consume"] = write(outsider_client, "consume_pause_authorization", [1, 2, AFFECTED, CAPABILITY, DURATION, ACTION_DIGEST])
     checkpoint(read(owner_client, "get_case", [1]).get("consumed") == 0, "wrong caller cannot consume")
-    txs["wrong_scope_consume"] = write(execution_client, "consume_pause_authorization", [1, 2, AFFECTED, CAPABILITY, DURATION + 1, ACTION_DIGEST])
-    checkpoint(read(owner_client, "get_case", [1]).get("consumed") == 0, "wrong scope cannot consume")
-    txs["consume"] = write(execution_client, "consume_pause_authorization", [1, 2, AFFECTED, CAPABILITY, DURATION, ACTION_DIGEST])
-    checkpoint(read(owner_client, "get_case", [1]).get("consumed") == 1, "exact authorization consumed once")
-    txs["replay"] = write(execution_client, "consume_pause_authorization", [1, 2, AFFECTED, CAPABILITY, DURATION, ACTION_DIGEST])
-    checkpoint(read(owner_client, "get_case", [1]).get("consumed") == 1, "replay leaves accounting unchanged")
+    txs["execution_target_consume_blocked"] = write(execution_client, "consume_pause_authorization", [1, 2, AFFECTED, CAPABILITY, DURATION, ACTION_DIGEST])
+    checkpoint(read(owner_client, "get_case", [1]).get("consumed") == 0, "execution target cannot consume a non-positive result")
     print("LIFECYCLE_COMPLETE", flush=True)
     print("transactions=" + canonical(txs), flush=True)
 

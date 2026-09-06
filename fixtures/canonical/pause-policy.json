@@ -1,1 +1,1 @@
-{"allowed_severities":["CRITICAL","HIGH"],"max_pause_seconds":86400,"min_pause_seconds":900,"policy_revision":1,"protocol_code":"FEG_BRIDGE_REPLAY"}
+{"allowed_severities":["CRITICAL","HIGH"],"max_incident_age_seconds":86400,"max_pause_seconds":86400,"min_pause_seconds":900,"policy_revision":1,"protocol_code":"FEG_BRIDGE_REPLAY"}
