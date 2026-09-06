@@ -19,8 +19,20 @@ MAX_BODY_BYTES = 14000
 BASE_CHAIN_ID = 8453
 
 
+def _address_text(value: typing.Any) -> str:
+    if hasattr(value, "as_hex"):
+        return str(value.as_hex).lower()
+    text = str(value).lower()
+    if text.startswith("0x"):
+        return text
+    try:
+        return "0x" + format(int(value), "040x")
+    except Exception:
+        return text
+
+
 def _sender() -> str:
-    return str(gl.message.sender_address).lower()
+    return _address_text(gl.message.sender_address)
 
 
 def _now() -> int:
@@ -134,8 +146,8 @@ class DAOEmergencyPauseJustification(gl.Contract):
         code = protocol_code.strip().upper()
         repo = repository.strip().lower()
         path = policy_path.strip()
-        council = str(security_council).lower()
-        target = str(execution_target).lower()
+        council = _address_text(security_council)
+        target = _address_text(execution_target)
         if not _code(code, 40): return "INVALID_PROTOCOL_CODE"
         if not _valid_repo(repo): return "INVALID_REPOSITORY"
         if not _valid_path(path): return "INVALID_POLICY_PATH"
@@ -162,7 +174,7 @@ class DAOEmergencyPauseJustification(gl.Contract):
     def rotate_protocol_authority(self, protocol_id: u256, security_council: Address, execution_target: Address) -> str:
         if _sender() != self.owner: return "ONLY_OWNER"
         if protocol_id == u256(0) or protocol_id > self.protocol_count: return "PROTOCOL_NOT_FOUND"
-        council = str(security_council).lower(); target = str(execution_target).lower()
+        council = _address_text(security_council); target = _address_text(execution_target)
         if not _address(council) or not _address(target) or council == target: return "INVALID_AUTHORITIES"
         self.protocol_security_council[protocol_id] = council
         self.protocol_execution_target[protocol_id] = target
@@ -175,7 +187,7 @@ class DAOEmergencyPauseJustification(gl.Contract):
         if self.protocol_active[protocol_id] == u256(0): return "PROTOCOL_INACTIVE"
         if _sender() != self.protocol_security_council[protocol_id]: return "ONLY_SECURITY_COUNCIL"
         commit = incident_commit.strip().lower(); path = incident_path.strip(); tx = incident_tx_hash.strip().lower()
-        affected = str(affected_contract).lower(); cap = capability.strip().upper(); digest = action_digest.strip().lower()
+        affected = _address_text(affected_contract); cap = capability.strip().upper(); digest = action_digest.strip().lower()
         duration = int(duration_seconds)
         if not _sha40(commit): return "INVALID_INCIDENT_COMMIT"
         if not _valid_path(path) or path == self.protocol_policy_path[protocol_id]: return "INVALID_INCIDENT_PATH"
@@ -317,7 +329,7 @@ class DAOEmergencyPauseJustification(gl.Contract):
         if _now() > int(self.case_expires_at[case_id]): return "AUTHORIZATION_EXPIRED"
         protocol_id = self.case_protocol_id[case_id]
         if _sender() != self.protocol_execution_target[protocol_id]: return "ONLY_EXECUTION_TARGET"
-        if str(affected_contract).lower() != self.case_affected_contract[case_id] or capability.strip().upper() != self.case_capability[case_id] or duration_seconds != self.case_duration[case_id] or action_digest.strip().lower() != self.case_action_digest[case_id]: return "AUTHORIZATION_SCOPE_MISMATCH"
+        if _address_text(affected_contract) != self.case_affected_contract[case_id] or capability.strip().upper() != self.case_capability[case_id] or duration_seconds != self.case_duration[case_id] or action_digest.strip().lower() != self.case_action_digest[case_id]: return "AUTHORIZATION_SCOPE_MISMATCH"
         self.case_consumed[case_id] = u256(1); self.case_consumed_at[case_id] = u256(_now())
         return "PAUSE_AUTHORIZATION_CONSUMED"
 

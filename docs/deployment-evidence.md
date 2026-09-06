@@ -15,4 +15,6 @@ Canonical lifecycle inputs:
 - Incident transaction: `0x60fd436dbd0e99c7585b775095048eced56bfc11e18331cfcb0cdad6f9fe7d87`
 - Blockscout result: `ok`, block `24331067`, target `0xEf7Bd1543bDAcAdD7e42822e3F15Dd0af0410fDa`
 
+The first registration transaction `0xe77904ad981fc74f59ea8877a258e0d1d777987a73dbbd062afe28c41db972c8` finalized but returned `INVALID_AUTHORITIES`. The receipt proves both intended addresses were encoded correctly. This exposed a GenVM runtime representation mismatch (`str(Address)` versus canonical `Address.as_hex`); state remained at zero and the source was patched with a dedicated regression test. A new deployment is required.
+
 Record the fixture commit, finalized transaction hashes, and matching before/after `get_case` reads here after the lifecycle. Do not claim a live result until the explorer shows finalized status.

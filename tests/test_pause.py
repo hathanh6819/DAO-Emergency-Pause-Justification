@@ -41,6 +41,7 @@ def prepared(d,vm):
 def test_shape_is_distinct_and_nonpayable():
     s=Path(CONTRACT).read_text(); assert "maintainer_handoff" not in s and "payable" not in s
     assert "pause-policy" not in s and "/git/trees/" in s and "hashlib.sha1" in s and "strict_eq" in s and "base.blockscout.com" in s
+    assert 'hasattr(value, "as_hex")' in s and "_address_text(security_council)" in s and "_address_text(affected_contract)" in s
     compile(s,CONTRACT,"exec")
 
 def test_owner_registry_and_rotation(direct_deploy,direct_vm,direct_bob):
