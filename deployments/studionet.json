@@ -1,0 +1,13 @@
+{
+  "network": "studionet",
+  "upgrade_policy": "frozen_replacement",
+  "historical_deployments": [
+    {
+      "address": "0xA31872DF1E62A84230a73F7204E1BC21c340dC2c",
+      "source_sha256": "b2169ac0d285602ee6457a2aaf4e3f7a6d4d8c21f0bb0183fad5589ed87454c1",
+      "status": "superseded_runtime_address_bug"
+    }
+  ],
+  "final_submission": null,
+  "replacement_source_sha256": "132989841bdcbfce19a902be360ddbc591dc9d0a178e850ca4a50dbea4482e8f"
+}
