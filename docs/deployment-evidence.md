@@ -1,6 +1,16 @@
 # Deployment evidence
 
-Status: v2 local verification complete; replacement Studionet deployment required.
+Status: v2 deployed with exact source parity; runtime address probe pending.
+
+Replacement v2 deployment:
+
+- Address: `0x8FB121E391c03E115Bed9b283C9233aAAdaC113f`
+- Owner readback: `0xa365f55a3bf352767bc5c5739ffddaee8fcf3a19`
+- Source parity: exact after LF newline normalization
+- Normalized deployed/local SHA-256: `0a1bff77f2187e4ff9d98800a1c246cdabf45114887125666efb875d78e7a2c5`
+- Initial readback: `protocol_count=0`, `case_count=0`
+- Schema: 12 methods (4 view, 8 write), no payable methods
+- Runtime address probe: pending
 
 - Historical/superseded contract: `0xA31872DF1E62A84230a73F7204E1BC21c340dC2c`
 - Explorer: https://explorer-studio.genlayer.com/address/0xA31872DF1E62A84230a73F7204E1BC21c340dC2c
